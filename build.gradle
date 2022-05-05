@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.wsmt.middleware.students'
+archivesBaseName = 'students'
+
+repositories {
+    mavenCentral()
+}
+
+def mainClass = 'com.wsmt.middleware.students.Exec'
+def serv = System.getProperty("serv")
+def clie = System.getProperty("clie")
+def jarDir = 'build-'
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    if (serv != null && clie == null) {
+        if (serv == 'idl') {
+            mainClass = mainClass + "IdlServ"
+            jarDir = jarDir + 'serv-idl'
+        }
+        if (serv == 'rmiiiop') {
+            mainClass = mainClass + "RmiIiopServ"
+            jarDir = jarDir + 'serv-rmiiiop'
+        }
+    }
+    if (serv == null && clie != null) {
+        if (clie == 'idl') {
+            mainClass = mainClass + "IdlClie"
+            jarDir = jarDir + 'clie-idl'
+        }
+        if (clie == 'idl-rmiiiop') {
+            mainClass = mainClass + "IdlClieForRmiIiop"
+            jarDir = jarDir + 'clie-idl-rmiiiop'
+        }
+        if (clie == 'rmiiiop') {
+            mainClass = mainClass + "RmiIiopClie"
+            jarDir = jarDir + 'clie-rmiiiop'
+        }
+    }
+
+    manifest { attributes 'Main-Class': mainClass }
+
+    destinationDirectory.set(file(jarDir))
+}
+
+dependencies {
+    implementation 'org.hibernate:hibernate-core:5.6.8.Final'
+    implementation 'mysql:mysql-connector-java:8.0.28'
+
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha7'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+test {
+    useJUnitPlatform()
+}

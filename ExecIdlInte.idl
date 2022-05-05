@@ -1,0 +1,46 @@
+module com {
+    module wsmt {
+        module middleware {
+            module students {
+                module service {
+                    module abstracts {
+                        struct Student {
+                            string name;
+                            string group;
+                        };
+
+                        struct SchoolObject {
+                            string name;
+                            string teacher;
+                        };
+
+                        struct Grade {
+                            Student student;
+                            SchoolObject schoolObject;
+                            long value;
+                        };
+
+                        typedef sequence<Student> StudentArray;
+                        typedef sequence<SchoolObject> SchoolObjectArray;
+                        typedef sequence<Grade> GradeArray;
+
+                        interface ExecIdlInte {
+                            void addStudent(in Student student);
+                            void updateStudent(in Student student);
+                            void deleteStudent(in string id);
+                            StudentArray getAllStudents();
+                            void addSchoolObject(in SchoolObject schoolObject);
+                            void updateSchoolObject(in SchoolObject schoolObject);
+                            void deleteSchoolObject(in string id);
+                            SchoolObjectArray getAllSchoolObjects();
+                            void addGrade(in Grade grade);
+                            void updateGrade(in Grade grade);
+                            GradeArray getCatalogForStudent(in string name);
+                            GradeArray getCatalogForSchoolObject(in string schoolObjectName);
+                        };
+                    };
+                };
+            };
+        };
+    };
+};
